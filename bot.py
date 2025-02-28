@@ -7,7 +7,7 @@ import getpass
 
 # Initialize Instagram client
 cl = Client()
-cl.delay_range = [2, 6]  # Adjusted delays to avoid bans
+cl.delay_range = [2, 6]  # Slower delays to avoid bans
 SESSION_FILE = "session.json"
 
 def log(message):
