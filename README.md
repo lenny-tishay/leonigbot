@@ -1,5 +1,5 @@
 
-```markdown
+
 # <span style="color: #FFD700;">LeonigBot</span> 🤖
 
 **Welcome to LeonigBot** - A terminal-controlled Instagram automation bot designed to view and like stories and posts. Built with love by `lenny-tishay` for seamless use on Termux (Android) or any simple OS!
