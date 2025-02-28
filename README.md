@@ -47,6 +47,9 @@ Lenny-Tishay Leonigbot is a powerful, terminal-controlled bot designed to automa
     ```bash
     git clone https://github.com/lenny-tishay/leonigbot
     ```
+    ```bash
+    cd leonigbot
+    ```
 2.  **Install Dependencies:**
     ```bash
     pip install -r requirements.txt
