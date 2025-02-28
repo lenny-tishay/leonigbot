@@ -1,144 +1,109 @@
+
 ```markdown
-# 🤖 LeonigBot: Your Terminal-Controlled Instagram Automation Buddy! 🌈✨
+# <span style="color: #FFD700;">LeonigBot</span> 🤖
 
-[![Made with Rust and Python](https://img.shields.io/badge/Made%20with-Rust%20%26%20Python-blueviolet?style=for-the-badge)](https://www.rust-lang.org/ "Rust") [![Instagrapi Powered](https://img.shields.io/badge/Powered%20by-Instagrapi-brightgreen?style=for-the-badge)](https://instagrapi.readthedocs.io/en/latest/ "Instagrapi")
-
-Welcome to **LeonigBot**, a terminal-based Instagram automation tool designed for simple OS environments like Termux! 🚀 This bot allows you to effortlessly view and like stories and posts, just like a linked web device. Get ready to supercharge your Instagram experience! 🌟
-
-## 🌟 Features
-
-* **Terminal-Controlled:** Manage your Instagram account directly from your terminal. 💻
-* **Automation:** Automatically view and like stories and posts. 👍👀
-* **Simple OS Compatibility:** Perfect for Termux and similar environments. 📱
-* **Easy Installation:** Step-by-step guide to get you up and running quickly. 🛠️
-* **Colorful Output:** Enjoy a visually appealing terminal experience. 🎨
-* **Animated Messages:** Fun animations to enhance your interaction. 🎉
-
-## 🎬 Demo (Imagine this with terminal animations!)
-
-```
-[LeonigBot] ✨ Starting login process... ✨
-[LeonigBot] 👤 Enter your Instagram username: your_username
-[LeonigBot] 🔑 Enter your Instagram password: *********
-[LeonigBot] 🔐 Enter 2FA code (if enabled): 123456
-[LeonigBot] 🚀 Login successful! 🚀
-[LeonigBot] 1. View Stories 📖
-[LeonigBot] 2. Like Posts ❤️
-[LeonigBot] 3. View and Like Both 🤩
-[LeonigBot] 4. Exit 🚪
-```
-
-## 🛠️ Installation Guide
-
-Follow these steps to get LeonigBot running on your Termux environment.
-
-**Step 1: Install Rust in Termux**
-
-To resolve potential dependency issues, install the Rust compiler in Termux:
-
-```bash
-pkg update && pkg upgrade -y
-pkg install rust -y
-rustc --version
-export PATH="$HOME/.cargo/bin:$PATH"
-echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
-```
-
-**Step 2: Retry Installing `instagrapi`**
-
-Now that Rust is installed, try installing `instagrapi` again:
-
-```bash
-pip install instagrapi
-```
-
-**Step 3: Verify Your Setup**
-
-Once `instagrapi` installs:
-
-```bash
-pip show instagrapi
-cd ~/leonigbot
-./start.sh
-```
-
-**Step 4: If You Still Have Issues**
-
-If Rust installation or `pip install instagrapi` still fails, we can try a workaround by pinning older versions of dependencies.
-
-1.  **Update `requirements.txt` on GitHub:**
-    * Go to [https://github.com/lenny-tishay/leonigbot](https://github.com/lenny-tishay/leonigbot).
-    * Click `requirements.txt`.
-    * Click the pencil icon to edit.
-    * Replace its contents with:
-
-    ```text
-    instagrapi==1.16.35
-    pydantic==1.10.13
-    ```
-
-    * Commit with a message like "Update requirements.txt with older versions."
-
-2.  **Pull changes in Termux:**
-
-    ```bash
-    cd ~/leonigbot
-    git pull origin main
-    ```
-
-3.  **Install again:**
-
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-**Step 5: Run the Bot Smoothly**
-
-Assuming `instagrapi` installs successfully:
-
-```bash
-./start.sh
-```
-
-**What Happens:**
-
-It runs the bot, prompting:
-
-```text
-[LeonigBot] Starting login process...
-[LeonigBot] Enter your Instagram username:
-```
-
-Enter your username, then password, then 2FA (if needed), one by one.
-
-Choose options 1-4 to view/like stories/posts.
-
-## 📝 Usage
-
-1.  Run `./start.sh` in your Termux terminal.
-2.  Follow the prompts to log in and select your desired actions.
-3.  Enjoy automated Instagram interactions! 🎉
-
-## ⚠️ Disclaimer
-
-* Use this bot responsibly and ethically.
-* Automating Instagram actions may violate Instagram's terms of service.
-* The developer is not responsible for any issues arising from the use of this bot.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to submit pull requests or open issues.
-
-## 📜 License
-
-This project is licensed under the MIT License.
-
-## 💖 Support
-
-If you find this project helpful, consider starring it! ⭐
+**Welcome to LeonigBot** - A terminal-controlled Instagram automation bot designed to view and like stories and posts. Built with love by `lenny-tishay` for seamless use on Termux (Android) or any simple OS!
 
 ---
 
-**Happy automating!** 🤖✨
+## <span style="color: #00FF00;">Features</span> 🌟
+- **Login:** Securely logs into your Instagram account as a linked web device.
+- **Automation:** Views and likes stories from followed users and posts from your timeline.
+- **Terminal Control:** Simple menu (1-4) to choose actions.
+- **Smooth Start:** Run with a single command like `npm start` using `./start.sh`.
+- **Dependencies:** Auto-installs required libraries with `requirements.txt`.
+
+---
+
+## <span style="color: #FF4500;">Files</span> 📂
+| File            | Description                                      |
+|-----------------|--------------------------------------------------|
+| `bot.py`        | The main bot script (Python).                   |
+| `requirements.txt` | Lists Python dependencies (`instagrapi`).     |
+| `start.sh`      | Bash script to install deps and run the bot.    |
+
+---
+
+## <span style="color: #1E90FF;">Setup Instructions</span> 🚀
+
+### Prerequisites
+- **Termux** (Android) or a simple OS with Python.
+- Git installed (`pkg install git`).
+
+### Steps
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/lenny-tishay/leonigbot.git
+   cd leonigbot
+   ```
+
+2. **Install Rust** (needed for `instagrapi`)
+   ```bash
+   pkg install rust -y
+   export PATH="$HOME/.cargo/bin:$PATH"
+   ```
+
+3. **Make start.sh Executable**
+   ```bash
+   chmod +x start.sh
+   ```
+
+4. **Run the Bot**
+   ```bash
+   ./start.sh
+   ```
+   - Follow prompts for username, password, and 2FA (if enabled).
+
+---
+
+## <span style="color: #FF69B4;">Usage</span> 🎨
+After running `./start.sh`, you’ll see:
 ```
+[LeonigBot] Starting login process...
+[LeonigBot] Enter your Instagram username: 
+```
+- Enter credentials one by one.
+- Then choose:
+```
+[LeonigBot] Options:
+1. View and like stories
+2. View and like posts
+3. Do both
+4. Exit
+```
+
+---
+
+## <span style="color: #9ACD32;">Troubleshooting</span> 🛠️
+- **“No module named instagrapi”**
+  ```bash
+  pip install instagrapi
+  ```
+- **Login Fails**
+  - Add this to `bot.py` after `cl = Client()`:
+    ```python
+    cl.set_user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+    ```
+  - Update on GitHub, then `git pull`.
+- **Rust Error**
+  - Ensure Rust is installed (`rustc --version`).
+
+---
+
+## <span style="color: #BA55D3;">Contributing</span> 💡
+Feel free to fork, tweak, and submit pull requests! Issues? Open a ticket on GitHub.
+
+---
+
+## <span style="color: #FFA500;">License</span> 📜
+MIT License - Free to use, modify, and share!
+
+---
+
+**<span style="color: #00CED1;">Happy Automating!</span>**  
+Created by `lenny-tishay` - 2025
+```
+
+---
+
+---
