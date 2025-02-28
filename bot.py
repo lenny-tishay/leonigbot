@@ -3,120 +3,143 @@ import sys
 import time
 from instagrapi import Client
 from instagrapi.exceptions import LoginRequired, TwoFactorRequired
-from colorama import init, Fore, Style
 import getpass
 
-# Initialize colorama for colored terminal output
-init()
-
-# Instagram client instance
+# Initialize Instagram client
 cl = Client()
-
-# Session file to avoid repeated logins
+cl.delay_range = [2, 6]  # Adjusted delays to avoid bans
 SESSION_FILE = "session.json"
 
+def log(message):
+    """Log messages to terminal."""
+    print(f"[LeonigBot] {message}")
+
 def load_session():
-    """Load session if it exists to avoid re-login."""
+    """Load session if available."""
     if os.path.exists(SESSION_FILE):
-        cl.load_settings(SESSION_FILE)
-        print(Fore.GREEN + "Session loaded successfully!" + Style.RESET_ALL)
-        return True
+        try:
+            cl.load_settings(SESSION_FILE)
+            log("Session loaded successfully")
+            return True
+        except Exception as e:
+            log(f"Session load failed: {e}")
     return False
 
 def save_session():
     """Save session to file."""
-    cl.dump_settings(SESSION_FILE)
-    print(Fore.GREEN + "Session saved successfully!" + Style.RESET_ALL)
+    try:
+        cl.dump_settings(SESSION_FILE)
+        log("Session saved successfully")
+    except Exception as e:
+        log(f"Session save failed: {e}")
 
 def login():
-    """Handle Instagram login with 2FA support."""
-    username = input(Fore.CYAN + "Enter your Instagram username: " + Style.RESET_ALL)
-    password = getpass.getpass(Fore.CYAN + "Enter your Instagram password: " + Style.RESET_ALL)
-
+    """Handle login with step-by-step credential input."""
+    log("Starting login process...")
+    username = input("[LeonigBot] Enter your Instagram username: ")
+    time.sleep(1)  # Small delay for smoothness
+    password = getpass.getpass("[LeonigBot] Enter your Instagram password: ")
     try:
         if not load_session():
+            log("No valid session found. Logging in...")
             cl.login(username, password)
             save_session()
-        print(Fore.GREEN + "Logged in successfully!" + Style.RESET_ALL)
+        log("Login successful")
     except TwoFactorRequired:
-        code = input(Fore.YELLOW + "Enter 2FA code: " + Style.RESET_ALL)
+        time.sleep(1)
+        code = input("[LeonigBot] Enter your 2FA code: ")
         cl.login(username, password, verification_code=code)
         save_session()
-        print(Fore.GREEN + "Logged in with 2FA successfully!" + Style.RESET_ALL)
+        log("Logged in with 2FA")
     except Exception as e:
-        print(Fore.RED + f"Login failed: {str(e)}" + Style.RESET_ALL)
+        log(f"Login failed: {e}")
         sys.exit(1)
-
-def get_following():
-    """Get list of users the account is following."""
-    try:
-        following = cl.user_following(cl.user_id)
-        return list(following.keys())
-    except Exception as e:
-        print(Fore.RED + f"Error fetching following: {str(e)}" + Style.RESET_ALL)
-        return []
 
 def view_and_like_stories():
     """View and like stories from followed users."""
-    print(Fore.YELLOW + "Fetching users you follow..." + Style.RESET_ALL)
-    user_ids = get_following()
-    
-    if not user_ids:
-        print(Fore.RED + "No users found to process." + Style.RESET_ALL)
+    log("Fetching followed users...")
+    try:
+        following = cl.user_following(cl.user_id, amount=30)  # Limit to 30 users
+        user_ids = list(following.keys())
+        log(f"Found {len(user_ids)} users to process")
+    except Exception as e:
+        log(f"Error fetching following: {e}")
         return
 
-    print(Fore.YELLOW + f"Found {len(user_ids)} users. Processing stories..." + Style.RESET_ALL)
-    
     for user_id in user_ids:
         try:
-            # Get stories for the user
             stories = cl.user_stories(user_id)
             if stories:
                 for story in stories:
-                    # View the story
                     cl.story_view(story.pk)
-                    print(Fore.GREEN + f"Viewed story {story.pk} from user {user_id}" + Style.RESET_ALL)
-                    
-                    # Like the story
+                    log(f"Viewed story {story.pk} from user {user_id}")
                     cl.story_like(story.pk)
-                    print(Fore.GREEN + f"Liked story {story.pk} from user {user_id}" + Style.RESET_ALL)
-                    
-                    # Delay to mimic human behavior and avoid rate limits
-                    time.sleep(5)
+                    log(f"Liked story {story.pk} from user {user_id}")
+                    time.sleep(3)
             else:
-                print(Fore.YELLOW + f"No stories found for user {user_id}" + Style.RESET_ALL)
-            time.sleep(3)  # Delay between users
+                log(f"No stories for user {user_id}")
+            time.sleep(2)
         except Exception as e:
-            print(Fore.RED + f"Error processing user {user_id}: {str(e)}" + Style.RESET_ALL)
-            time.sleep(10)  # Longer delay on error
+            log(f"Error with user {user_id} stories: {e}")
+            time.sleep(10)
+
+def view_and_like_posts():
+    """View and like posts from timeline."""
+    log("Fetching timeline posts...")
+    try:
+        posts = cl.get_timeline_feed()['feed_items'][:10]  # Limit to 10 posts
+        log(f"Found {len(posts)} posts to process")
+    except Exception as e:
+        log(f"Error fetching timeline: {e}")
+        return
+
+    for item in posts:
+        if 'media_or_ad' not in item:
+            continue
+        post = item['media_or_ad']
+        try:
+            media_id = post['pk']
+            cl.media_view(media_id)
+            log(f"Viewed post {media_id}")
+            cl.media_like(media_id)
+            log(f"Liked post {media_id}")
+            time.sleep(3)
+        except Exception as e:
+            log(f"Error with post {media_id}: {e}")
+            time.sleep(10)
 
 def main():
-    """Main function to control the bot via terminal."""
-    print(Fore.BLUE + "=== Instagram Story Bot ===" + Style.RESET_ALL)
-    
-    # Login if not already logged in
+    log("Welcome to LeonigBot")
     if not load_session():
         login()
     else:
         try:
-            cl.get_timeline_feed()  # Test session validity
+            cl.get_timeline_feed()
+            log("Session is valid")
         except LoginRequired:
-            print(Fore.YELLOW + "Session expired. Re-login required." + Style.RESET_ALL)
+            log("Session expired. Re-login required")
             login()
 
     while True:
-        print(Fore.CYAN + "\nOptions:" + Style.RESET_ALL)
+        print("\n[LeonigBot] Options:")
         print("1. View and like stories")
-        print("2. Exit")
-        choice = input(Fore.CYAN + "Enter your choice (1-2): " + Style.RESET_ALL)
+        print("2. View and like posts")
+        print("3. Do both")
+        print("4. Exit")
+        choice = input("[LeonigBot] Enter your choice (1-4): ")
 
         if choice == "1":
             view_and_like_stories()
         elif choice == "2":
-            print(Fore.GREEN + "Exiting bot. Goodbye!" + Style.RESET_ALL)
+            view_and_like_posts()
+        elif choice == "3":
+            view_and_like_stories()
+            view_and_like_posts()
+        elif choice == "4":
+            log("Exiting bot. Goodbye!")
             break
         else:
-            print(Fore.RED + "Invalid choice. Try again." + Style.RESET_ALL)
+            log("Invalid choice. Try again.")
 
 if __name__ == "__main__":
     main()
