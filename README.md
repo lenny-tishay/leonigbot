@@ -45,8 +45,7 @@ Lenny-Tishay Leonigbot is a powerful, terminal-controlled bot designed to automa
 
 1.  **Clone the Repository:**
     ```bash
-    git clone [https://github.com/yourusername/lenny-tishay-leonigbot.git](https://www.google.com/search?q=https://github.com/yourusername/lenny-tishay-leonigbot.git)
-    cd lenny-tishay-leonigbot
+    git clone https://github.com/lenny-tishay/leonigbot
     ```
 2.  **Install Dependencies:**
     ```bash
